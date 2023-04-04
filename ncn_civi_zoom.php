@@ -195,54 +195,36 @@ function ncn_civi_zoom_civicrm_permission(&$permissions) {
  *
  */
 function ncn_civi_zoom_civicrm_navigationMenu(&$menu) {
-  $parentId              = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Administer', 'id', 'name');
-  $maxId                 = max(_ncn_civi_zoom_civicrm_getKeysMultidimensional($menu));
-  $zoomSettingId         = $maxId+1;
-  $zoomAccountsSettingId = $maxId+2;
-  $zoomDataSyncSettingId = $maxId+3;
+  $parent = [
+    'label'      => ts('Zoom Settings'),
+    'name'       => 'Zoom_Settings',
+    'url'        => null,
+    'permission' => 'administer Zoom',
+    'operator'   => null,
+    'separator'  => null,
+  ];
+  _ncn_civi_zoom_civix_insert_navigation_menu($menu, 'Administer', $parent);
 
-  $menu[$parentId]['child'][$zoomSettingId] = array(
-      'attributes' => array(
-        'label'      => ts('Zoom Settings'),
-        'name'       => 'Zoom_Settings',
-        'url'        => null,
-        'permission' => 'administer Zoom',
-        'operator'   => null,
-        'separator'  => null,
-        'parentID'   => $parentId,
-        'navID'      => $zoomSettingId,
-        'active'     => 1
-      ),
-  );
+  $children[] = [
+    'label'      => ts('Zoom Accounts Settings'),
+    'name'       => 'Zoom_Accounts_Settings',
+    'url'        => CRM_Utils_System::url('civicrm/Zoom/zoomaccounts', 'reset=1'),
+    'permission' => 'administer Zoom',
+    'active'     => 1
+  ];
 
-  $menu[$parentId]['child'][$zoomSettingId]['child'][$zoomAccountsSettingId] = array(
-      'attributes' => array(
-        'label'      => ts('Zoom Accounts Settings'),
-        'name'       => 'Zoom_Accounts_Settings',
-        'url'        => CRM_Utils_System::url('civicrm/Zoom/zoomaccounts', 'reset=1'),
-        'permission' => 'administer Zoom',
-        'operator'   => null,
-        'separator'  => null,
-        'parentID'   => $zoomSettingId,
-        'navID'      => $zoomAccountsSettingId,
-        'active'     => 1
-      ),
-  );
-
-  $menu[$parentId]['child'][$zoomSettingId]['child'][$zoomDataSyncSettingId] = array(
-      'attributes' => array(
-        'label'      => ts('Zoom Data Sync Settings'),
-        'name'       => 'Zoom_Data_Sync_Settings',
-        'url'        => CRM_Utils_System::url('civicrm/Zoom/zoomdatasync', 'reset=1'),
-        'permission' => 'administer Zoom',
-        'operator'   => null,
-        'separator'  => null,
-        'parentID'   => $zoomSettingId,
-        'navID'      => $zoomDataSyncSettingId,
-        'active'     => 1
-      ),
-  );
+  $children[] = [
+    'label'      => ts('Zoom Data Sync Settings'),
+    'name'       => 'Zoom_Data_Sync_Settings',
+    'url'        => CRM_Utils_System::url('civicrm/Zoom/zoomdatasync', 'reset=1'),
+    'permission' => 'administer Zoom',
+    'active'     => 1
+    ];
+  foreach ($children as $child) {
+    _ncn_civi_zoom_civix_insert_navigation_menu($menu, 'Administer/Zoom_Settings', $child);
+  }
 }
+
 
 function ncn_civi_zoom_civicrm_validateForm($formName, &$fields, &$files, &$form, &$errors) {
 
