@@ -187,12 +187,11 @@ class CRM_NcnCiviZoom_Form_Settings extends CRM_Core_Form {
     $this->assign('columnNames',$columnNames);
     //Set default Values
     $this->setDefaults($defaults);
-
-    $this->addFormRule(array('CRM_NcnCiviZoom_Form_Settings', 'formRule'));
+    $this->addFormRule(['CRM_NcnCiviZoom_Form_Settings', 'formRule']);
     parent::buildQuickForm();
   }
 
-  public function formRule($fields) {
+  public static function formRule($fields) {
     $errors = array();
 
     if (!empty($fields['user_id'])) {
