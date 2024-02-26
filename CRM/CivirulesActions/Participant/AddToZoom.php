@@ -159,7 +159,7 @@ class CRM_CivirulesActions_Participant_AddToZoom extends CRM_Civirules_Action{
 
   public function getJoinUrl($object){
     $eventId = $object->event_id;
-    $accountId = CiviZoomUtils::getZoomAccountIdByEventId($eventId);
+    $accountId = $object->account_id;
     $settings = CiviZoomUtils::getZoomSettings();
     $webinar = $object->getWebinarID($eventId);
     $meeting = $object->getMeetingID($eventId);

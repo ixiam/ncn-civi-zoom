@@ -276,10 +276,12 @@ function ncn_civi_zoom_civicrm_postProcess($formName, $form) {
   if($formName == 'CRM_Event_Form_ManageEvent_EventInfo'){
     $values = $form->exportValues();
     $customFieldZoomAccount = CRM_NcnCiviZoom_Utils::getAccountIdCustomField();
-    if(isset($values['zoom_account_list']) && !empty($form->_id) && !empty($customFieldZoomAccount)){
+    $id = $form->get('id');
+
+    if(isset($values['zoom_account_list']) && !empty($id) && !empty($customFieldZoomAccount)){
       // Preparing the api params to store the zoom account id
       $createApiParams = array(
-        'entity_id' => $form->_id,
+        'entity_id' => $id,
         $customFieldZoomAccount => $values['zoom_account_list'],
       );
       // Trying to store the zoom joining link also
@@ -303,7 +305,8 @@ function ncn_civi_zoom_civicrm_postProcess($formName, $form) {
       }
       if(!empty($cFDetails['id']) && !empty($cF2Details['id'])){
         $object = new CRM_CivirulesActions_Participant_AddToZoom;
-        $object->event_id = $form->_id;
+        $object->event_id = $id;
+        $object->account_id = $values['zoom_account_list'];
         $joinUrl = CRM_CivirulesActions_Participant_AddToZoom::getJoinUrl($object);
         if(!empty($joinUrl[0])){
           $createApiParams['custom_'.$cFDetails['id']] = $joinUrl[0];
